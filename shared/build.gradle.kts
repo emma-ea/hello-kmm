@@ -2,6 +2,7 @@ plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization") version "1.6.21"
     id("com.android.library")
+    id("com.squareup.sqldelight")
 }
 
 kotlin {
@@ -18,6 +19,7 @@ kotlin {
     }
 
     val ktorVersion = "2.0.2"
+    val sqlDelightVersion: String by project
 
     sourceSets {
         val commonMain by getting {
@@ -27,6 +29,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+                implementation("com.squareup.sqldelight:runtime:$sqlDelightVersion")
             }
         }
         val commonTest by getting {
@@ -38,6 +41,7 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-android:$ktorVersion")
+                implementation("com.squareup.sqldelight:android-driver:$sqlDelightVersion")
             }
         }
         val androidTest by getting
@@ -51,6 +55,7 @@ kotlin {
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
                 implementation("io.ktor:ktor-client-darwin:$ktorVersion")
+                implementation("com.squareup.sqldelight:native-driver:$sqlDelightVersion")
             }
         }
         val iosX64Test by getting
@@ -73,6 +78,7 @@ android {
         targetSdk = 32
     }
 }
+
 dependencies {
     implementation("junit:junit:4.12")
 }
@@ -80,5 +86,11 @@ dependencies {
 kotlin.targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget::class.java) {
     binaries.all {
         binaryOptions["memoryModel"] = "experimental"
+    }
+}
+
+sqldelight {
+    database("AppDatabase") {
+        packageName = "com.emma_ea.hellokmm.sqldelight"
     }
 }
