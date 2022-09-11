@@ -39,4 +39,16 @@
 
     </FrameLayout>
 
+    <TextView
+        android:id="@+id/pull_to_refresh_notif"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pull_down_to_refresh"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias=".60"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

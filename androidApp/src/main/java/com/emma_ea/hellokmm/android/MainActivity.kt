@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var launchesRecyclerView: RecyclerView
     private lateinit var progressBarView: FrameLayout
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var pullToRefreshTv: TextView
 
     private val launchesRvAdapter = LaunchesRvAdapter(listOf())
 
@@ -34,9 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         title = "SpaceX Launches"
 
-        launchesRecyclerView = findViewById(R.id.launchesListRv)
-        progressBarView = findViewById(R.id.progressBar)
-        swipeRefreshLayout = findViewById(R.id.swipeContainer)
+        initViews()
 
         launchesRecyclerView.adapter = launchesRvAdapter
         launchesRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -46,10 +45,26 @@ class MainActivity : AppCompatActivity() {
             displayLaunches(true)
         }
         displayLaunches(false)
+
+        pullToRefreshTv.isVisible = false
+
+        if (launchesRvAdapter.launches.isEmpty()) {
+            pullToRefreshTv.isVisible = true
+        }
+
+    }
+
+    private fun initViews() {
+        launchesRecyclerView = findViewById(R.id.launchesListRv)
+        progressBarView = findViewById(R.id.progressBar)
+        swipeRefreshLayout = findViewById(R.id.swipeContainer)
+        pullToRefreshTv = findViewById(R.id.pull_to_refresh_notif)
     }
 
     private fun displayLaunches(needReload: Boolean) {
         progressBarView.isVisible = true
+        pullToRefreshTv.isVisible = true
+        pullToRefreshTv.text = "Refreshing..."
         scope.launch {
             kotlin.runCatching {
                 sdk.getLaunches(needReload)
@@ -60,6 +75,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this@MainActivity, it.localizedMessage, Toast.LENGTH_SHORT).show()
             }
             progressBarView.isVisible = false
+            pullToRefreshTv.isVisible = false
         }
     }
 
@@ -67,4 +83,5 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         scope.cancel()
     }
+
 }
