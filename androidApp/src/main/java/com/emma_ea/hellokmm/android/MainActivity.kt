@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         pullToRefreshTv.isVisible = false
 
+        // TODO: not working
         if (launchesRvAdapter.launches.isEmpty()) {
             pullToRefreshTv.isVisible = true
         }
